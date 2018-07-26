@@ -2,12 +2,12 @@ const path = require("path");
 const express = require("express");
 const http = require("http");
 const SocketIO = require("socket.io");
-const {generateMessage} = require("./utils/message.js");
+const {generateMessage,generateLocationMessage} = require("./utils/message.js");
 const publicPath = path.join(__dirname , "../public");
 
 
 var app = express();
-var port = process.env.PORT || 2222
+var port = process.env.PORT || 5555
 app.use(express.static(publicPath));
 
 var server = http.createServer(app);
@@ -27,6 +27,11 @@ socket.emit("newMessage", generateMessage("Admin","Welcome Vijay"));
   socket.on("createMessage" , (message , callback) => {
       io.emit("newMessage", generateMessage(message.from,message.text));
       callback("Event acknowledged");
+});
+
+socket.on("createGeolocationMessage" ,(position) => {
+  console.log("Server ",position);
+  io.emit("newLocationMessage",generateLocationMessage("Admin",`${position.latitude}` , `${position.longitude}`));
 });
 
 });
