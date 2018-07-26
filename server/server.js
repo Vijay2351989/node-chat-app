@@ -7,7 +7,7 @@ const publicPath = path.join(__dirname , "../public");
 
 
 var app = express();
-var port = process.env.PORT || 8888
+var port = process.env.PORT || 2222
 app.use(express.static(publicPath));
 
 var server = http.createServer(app);
@@ -19,13 +19,14 @@ io.on("connection" , (socket)=>{
     console.log("User disconnected");
   });
 
- socket.emit("newMessage", generateMessage("Admin","Welcome Vijay"));
+socket.emit("newMessage", generateMessage("Admin","Welcome Vijay"));
 
  socket.broadcast.emit("newMessage", generateMessage("Admin","Vijay Joined"));
 
 
-  socket.on("createMessage" , (message) => {
+  socket.on("createMessage" , (message , callback) => {
       io.emit("newMessage", generateMessage(message.from,message.text));
+      callback("Event acknowledged");
 });
 
 });
