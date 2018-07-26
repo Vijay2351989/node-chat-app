@@ -19,9 +19,9 @@ io.on("connection" , (socket)=>{
     console.log("User disconnected");
   });
 
-socket.emit("newMessage", generateMessage("Admin","Welcome Vijay"));
+socket.emit("newMessage", generateMessage("Admin","Welcome to the chat app"));
 
- socket.broadcast.emit("newMessage", generateMessage("Admin","Vijay Joined"));
+ socket.broadcast.emit("newMessage", generateMessage("Admin","User Joined"));
 
 
   socket.on("createMessage" , (message , callback) => {
