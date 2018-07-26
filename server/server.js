@@ -2,6 +2,7 @@ const path = require("path");
 const express = require("express");
 const http = require("http");
 const SocketIO = require("socket.io");
+const {generateMessage} = require("./utils/message.js");
 const publicPath = path.join(__dirname , "../public");
 
 
@@ -18,30 +19,17 @@ io.on("connection" , (socket)=>{
     console.log("User disconnected");
   });
 
-  socket.emit("newMessage", {
-    from : "Admin",
-    text :"Welcome Vijay",
-    createdAt : new Date().getTime()
-  });
+ socket.emit("newMessage", generateMessage("Admin","Welcome Vijay"));
 
-  socket.broadcast.emit("newMessage", {
-    from : "Admin",
-    text :"Vijay Joined",
-    createdAt : new Date().getTime()
-  });
+ socket.broadcast.emit("newMessage", generateMessage("Admin","Vijay Joined"));
 
 
   socket.on("createMessage" , (message) => {
-      io.emit("newMessage", {
-        from : message.from,
-        text : message.text,
-        createdAt : new Date().getTime()
-      });
-  });
+      io.emit("newMessage", generateMessage(message.from,message.text));
 });
 
-
+});
 
 server.listen(port, () => {
   console.log(`Server running on port ${port}`);
-})
+});
