@@ -17,7 +17,18 @@ var scrollDown = function(){
 
 
 socket.on("connect" , function()  {
-  console.log("New user connected");
+   var params = jQuery.deparam(window.location.search);
+   socket.emit("join" , params, function(err){
+     if(err)
+     {
+       alert("Name and room is required");
+       window.location.href = "/";
+     }
+     else {
+       console.log("No error");
+
+     }
+   });
 });
 
 socket.on("disconnect" , function()  {
@@ -49,6 +60,17 @@ socket.on("newLocationMessage",function(message){
   });
   jQuery("#message-list").append(html);
   scrollDown();
+});
+
+socket.on("updateUserList" , function(users){
+  var ol = jQuery('<ol></ol>');
+  users.forEach(function(user){
+    var li = jQuery('<li></li>').text(user);
+    ol.append(li);
+  });
+
+  jQuery("#user").html(ol);
+
 });
 
 
