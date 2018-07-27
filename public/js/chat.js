@@ -77,7 +77,7 @@ socket.on("updateUserList" , function(users){
 jQuery("#message-form").on("submit" , function(e) {
   var messageTextBox = jQuery("[name = message]");
   e.preventDefault();
-  socket.emit("createMessage", {from : "User" , text : messageTextBox.val()} , function(){
+  socket.emit("createMessage", {text : messageTextBox.val()} , function(){
     messageTextBox.val('');
   });
 });

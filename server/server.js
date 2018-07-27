@@ -26,7 +26,7 @@ io.on("connection" , (socket)=>{
   socket.on("join" , (params,callback) => {
       if(!(isValidString(params.name) && isValidString(params.room)))
       {
-        callback("Name and room is required.");
+        return callback("Name and room is required.");
       }
       socket.join(params.room);
       users.removeUser(socket.id);
@@ -39,13 +39,19 @@ io.on("connection" , (socket)=>{
 
   socket.on("createMessage" , (message , callback) => {
       var user = users.getUser(socket.id);
-      io.to(user.room).emit("newMessage", generateMessage(message.from,message.text));
+      if(user && isValidString(message.text))
+      {
+      io.to(user.room).emit("newMessage", generateMessage(user.name,message.text));
       callback("Event acknowledged");
+     }
 });
 
 socket.on("createGeolocationMessage" ,(position) => {
   var user = users.getUser(socket.id);
-  io.to(user.room).emit("newLocationMessage",generateLocationMessage("Admin",`${position.latitude}` , `${position.longitude}`));
+  if(user)
+  {
+  io.to(user.room).emit("newLocationMessage",generateLocationMessage(user.name,`${position.latitude}` , `${position.longitude}`));
+  }
 });
 
 });
